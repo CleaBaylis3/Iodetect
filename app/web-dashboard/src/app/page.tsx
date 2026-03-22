@@ -1,12 +1,5 @@
-import dynamic from "next/dynamic";
+import MapSection from "@/components/MapSection";
 import { mockReadings } from "@/lib/mockReadings";
-
-const MapView = dynamic(() => import("@/components/MapView"), {
-  ssr: false,
-  loading: () => (
-    <div className="mt-3 h-[420px] rounded-lg bg-gray-50 animate-pulse" />
-  ),
-});
 
 export default function Home() {
   return (
@@ -40,7 +33,7 @@ export default function Home() {
           <div className="lg:col-span-2 rounded-xl border bg-white p-4 shadow-sm">
             <div className="text-sm font-medium">Global Readings Map</div>
             <div className="mt-3">
-              <MapView readings={mockReadings} />
+              <MapSection readings={mockReadings} />
             </div>
           </div>
 
