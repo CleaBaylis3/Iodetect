@@ -1,3 +1,13 @@
+import dynamic from "next/dynamic";
+import { mockReadings } from "@/lib/mockReadings";
+
+const MapView = dynamic(() => import("@/components/MapView"), {
+  ssr: false,
+  loading: () => (
+    <div className="mt-3 h-[420px] rounded-lg bg-gray-50 animate-pulse" />
+  ),
+});
+
 export default function Home() {
   return (
     <main className="min-h-screen p-8">
@@ -9,7 +19,6 @@ export default function Home() {
           </p>
         </header>
 
-        {/* Metric cards */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Total Readings", value: "—" },
@@ -27,11 +36,12 @@ export default function Home() {
           ))}
         </section>
 
-        {/* Main content placeholders */}
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="lg:col-span-2 rounded-xl border bg-white p-4 shadow-sm">
-            <div className="text-sm font-medium">Map (coming next)</div>
-            <div className="mt-3 h-[420px] rounded-lg bg-gray-50" />
+            <div className="text-sm font-medium">Global Readings Map</div>
+            <div className="mt-3">
+              <MapView readings={mockReadings} />
+            </div>
           </div>
 
           <div className="rounded-xl border bg-white p-4 shadow-sm">
