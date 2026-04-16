@@ -12,6 +12,7 @@ import {
   CalendarRange,
   UserRound,
   RotateCcw,
+  BarChart3
 } from "lucide-react";
 
 import LogoutButton from "@/components/LogoutButton";
@@ -103,6 +104,39 @@ export default function DashboardClient() {
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     )
     .slice(0, 8);
+
+  const selectedCountryReadings =
+    countryFilter === "ALL"
+      ? []
+      : filteredReadings.filter(
+          (reading) => reading.location.country === countryFilter
+        );
+
+  const countryAverageIodine =
+    selectedCountryReadings.length === 0
+      ? 0
+      : Math.round(
+          selectedCountryReadings.reduce(
+            (sum, reading) => sum + reading.iodine_ug_L,
+            0
+          ) / selectedCountryReadings.length
+        );
+
+  const countryUniqueUsers = new Set(
+    selectedCountryReadings.map((reading) => reading.user.id)
+  ).size;
+
+  const countryLowCount = selectedCountryReadings.filter(
+    (reading) => reading.status === "LOW"
+  ).length;
+
+  const countryNormalCount = selectedCountryReadings.filter(
+    (reading) => reading.status === "NORMAL"
+  ).length;
+
+  const countryHighCount = selectedCountryReadings.filter(
+    (reading) => reading.status === "HIGH"
+  ).length;
 
   const metricCards = [
     {
@@ -297,6 +331,88 @@ export default function DashboardClient() {
               </select>
             </div>
           </div>
+        </section>
+
+        <section className="rounded-[30px] border border-white/60 bg-white/78 p-5 shadow-[0_18px_45px_rgba(59,130,246,0.1)] backdrop-blur">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
+              <BarChart3 className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-slate-800">
+                Country Insights
+              </h2>
+              <p className="text-sm text-slate-500">
+                Summary statistics for the selected country
+              </p>
+            </div>
+          </div>
+
+          {countryFilter === "ALL" ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-center text-sm text-slate-500">
+              Select a country in the filters above to view country-level iodine insights.
+            </div>
+          ) : (<div className="space-y-4">
+  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div className="rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-100">
+      <p className="text-sm font-medium text-slate-500">Country</p>
+      <p className="mt-2 text-2xl font-bold text-slate-800">
+        {countryFilter}
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-100">
+      <p className="text-sm font-medium text-slate-500">Average Iodine</p>
+      <p className="mt-2 text-2xl font-bold text-slate-800">
+        {countryAverageIodine} µg/L
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-100">
+      <p className="text-sm font-medium text-slate-500">Readings</p>
+      <p className="mt-2 text-2xl font-bold text-slate-800">
+        {selectedCountryReadings.length}
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-slate-50 px-4 py-4 ring-1 ring-slate-100">
+      <p className="text-sm font-medium text-slate-500">Users</p>
+      <p className="mt-2 text-2xl font-bold text-slate-800">
+        {countryUniqueUsers}
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <p className="mb-3 text-sm font-medium text-slate-500">
+      Status Breakdown
+    </p>
+
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="rounded-2xl bg-red-50 px-4 py-4 ring-1 ring-red-100">
+        <p className="text-sm font-medium text-red-600">Low</p>
+        <p className="mt-2 text-2xl font-bold text-red-700">
+          {countryLowCount}
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-yellow-50 px-4 py-4 ring-1 ring-yellow-100">
+        <p className="text-sm font-medium text-yellow-700">Normal</p>
+        <p className="mt-2 text-2xl font-bold text-yellow-700">
+          {countryNormalCount}
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-green-50 px-4 py-4 ring-1 ring-green-100">
+        <p className="text-sm font-medium text-green-700">High</p>
+        <p className="mt-2 text-2xl font-bold text-green-700">
+          {countryHighCount}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+          )}
         </section>
 
         <section className="rounded-[30px] border border-white/60 bg-white/82 p-5 shadow-[0_18px_45px_rgba(59,130,246,0.1)] backdrop-blur">
