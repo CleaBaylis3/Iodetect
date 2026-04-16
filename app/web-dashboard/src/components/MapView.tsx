@@ -15,13 +15,13 @@ type MapViewProps = {
 function getMarkerColor(status: IodineStatus): string {
   switch (status) {
     case "LOW":
-      return "gold";
+      return "#ef4444"; // red
     case "NORMAL":
-      return "green";
+      return "#facc15"; // yellow
     case "HIGH":
-      return "red";
+      return "#22c55e"; // green
     default:
-      return "blue";
+      return "#3b82f6"; // blue fallback
   }
 }
 
@@ -48,7 +48,7 @@ function createColoredIcon(status: IodineStatus) {
 
 export default function MapView({ readings }: MapViewProps) {
   return (
-    <div className="h-[420px] w-full overflow-hidden rounded-lg">
+    <div className="h-[460px] w-full overflow-hidden rounded-[24px]">
       <MapContainer
         center={[20, 0]}
         zoom={2}
@@ -56,7 +56,7 @@ export default function MapView({ readings }: MapViewProps) {
         className="h-full w-full"
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
+          attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -69,10 +69,16 @@ export default function MapView({ readings }: MapViewProps) {
             >
               <Popup>
                 <div className="space-y-1">
-                  <div><strong>{reading.location.city}, {reading.location.country}</strong></div>
+                  <div>
+                    <strong>
+                      {reading.location.city}, {reading.location.country}
+                    </strong>
+                  </div>
                   <div>Iodine: {reading.iodine_ug_L} µg/L</div>
                   <div>Status: {reading.status}</div>
-                  <div>Time: {new Date(reading.timestamp).toLocaleString()}</div>
+                  <div>
+                    Time: {new Date(reading.timestamp).toLocaleString()}
+                  </div>
                 </div>
               </Popup>
             </Marker>
