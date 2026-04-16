@@ -47,7 +47,7 @@ function createColoredIcon(status: IodineStatus) {
   });
 }
 
-function createClusterCustomIcon(cluster: L.MarkerCluster) {
+function createClusterCustomIcon(cluster: any) {
   const count = cluster.getChildCount();
 
   return L.divIcon({
